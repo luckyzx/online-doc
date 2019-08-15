@@ -39,7 +39,12 @@ function loadFileContent(filepath){
  * @param filepath
  */
 function isDir(filepath){
-    let stas = fs.lstatSync(filepath);
+    let stas;
+    try{
+        stas = fs.lstatSync(filepath);
+    }catch(e){
+        stas = fs.lstatSync(filepath.concat('___jb_tmp___'));
+    }
     return stas.isDirectory();
 }
 
@@ -82,6 +87,28 @@ function activeCurMenu(curDoc,menuJson){
         }
     }
 }
+
+/**
+ * 批量替换图片路径
+ * @param mdContent
+ * @param mdName
+ */
+function batchDealImgPath(mdContent,mdName){
+    if(mdContent){
+        mdContent = mdContent.replace(/<(img|IMG).*?(?:>|\/>)/g,(matchStr,m1,m2)=>{
+            console.log("matchStr------>",matchStr);
+            let imgName='';
+            matchStr.replace(/(src|SRC).*?[=](\'|\")?.+(\'|\")?[^\/>]/g,(str,regStr,index)=>{
+                imgName = str.split('=').pop().replace(/\'/g,'').replace(/\"/g,'');
+            });
+            let newStr = matchStr.split('=').shift().concat("='"+path.join(path.sep,'static','doc',mdName,'images'))
+                .concat(path.sep+imgName+'\'/>');
+            console.log('newStr--------',newStr)
+            return newStr;
+        });
+        return mdContent;
+    }
+}
 module.exports = {
     writeFile:writeFile,
     isFileExist:isFileExist,
@@ -89,5 +116,6 @@ module.exports = {
     isDir:isDir,
     getFileExt:getFileExt,
     isMD:isMD,
-    activeCurMenu:activeCurMenu
+    activeCurMenu:activeCurMenu,
+    batchDealImgPath:batchDealImgPath
 };

@@ -31,4 +31,4 @@ onTargetChange| 时刻获取Affix的状态值,返回值{state}| function| -
  暂无
 
  ## 更新日志
- <img src='/static/doc/doc3/images/注解.jpg'/>
+ <img src='注解.jpg'/>

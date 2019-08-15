@@ -9,7 +9,7 @@ const common = require('../public/js/common');
 const generateMDNavTree = require('../public/js/generateMDNavTree');
 require('../public/js/fileListener');
 
-let {activeCurMenu} = common;
+let {activeCurMenu,batchDealImgPath} = common;
 let {getRightNavTree} = generateMDNavTree;
 /**
  * 加载md内容，返回html
@@ -25,6 +25,7 @@ function loadTemplateHtml(docName){
         let template = swig.compileFile(docPath);
         docHtml = template();
         docHtml = docHtml.split('</menu>').pop();
+        docHtml = batchDealImgPath(docHtml,docName);
     }
     return docHtml;
 }

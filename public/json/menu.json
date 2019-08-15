@@ -1,16 +1,1 @@
-{
-  "测试": {
-    "test1": {
-      "version": "0.1.0",
-      "component": "doc"
-    },
-    "test2": {
-      "version": "0.1.0",
-      "component": "doc2"
-    },
-    "test3": {
-      "version": "0.1.0",
-      "component": "doc3"
-    }
-  }
-}
+{"测试":{"test1":{"version":"0.1.0","component":"doc","active":false},"test2":{"version":"0.1.0","component":"doc2","active":false},"test3":{"version":"0.1.0","component":"doc3"}}}
