@@ -1,0 +1,30 @@
+{% extends 'common/layout.html' %}
+
+{% block css %}
+<link rel="stylesheet" href="//cdn.bootcss.com/antd-mobile/2.2.13/antd-mobile.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.css" />
+<link href="//design.yonyoucloud.com/static/tinper-bee/2.0.3/assets/tinper-bee.css" id="tinper-bee-csslink" rel="stylesheet" media="screen" />
+<link href="/static/css/md.css" type="text/css" rel="stylesheet" />
+<link href="/static/css/doc-search.css" type="text/css" rel="stylesheet" />
+<link href="/static/css/rightNav.css" type="text/css" rel="stylesheet" />
+<link href="/static/css/nav.css" type="text/css" rel="stylesheet" />
+{% endblock%}
+
+{% block script %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/docsearch.js@2/dist/cdn/docsearch.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="page-container example">
+    <div class="u-row content-container">
+        {% include "common/menu.html"%}
+        <div class="u-col-xs-12 u-col-sm-9 u-col-md-9 demo-container" id="docContent">
+            {% autoescape false %}
+            {{ doc| }}
+            {% endautoescape %}
+        </div>
+    </div>
+    {%include 'common/rightNav.html' %}
+</div>
+{% endblock %}
+

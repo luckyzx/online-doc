@@ -1,0 +1,39 @@
+<div class="right-menus">
+    <div id="rightNavId">
+        {%for key in rightNav-%}
+            <ul class="rm-list">
+                    <li class="rm-list-item active" name="{{key.title}}">
+                        <a class="rm-list-item-a" href="#{{key.title}}" title="{{key.title}}">{{key.title}}</a></li>
+                <!--组件右侧标题-->
+                <ul class="rm-child-list">
+
+                </ul>
+                {% if key.children.length > 0 %}
+                <ul class="rm-child-list">
+                    {% for item in key.children -%}
+                        <li class="rm-list-item" name="{{item.title}}">
+                            <a class="rm-list-item-a" href="#{{item.title}}" title="{{item.title}}">{{item.title}} </a>
+                        </li>
+                    {%-endfor%}
+                </ul>
+                {% endif %}
+            </ul>
+        {%-endfor%}
+    </div>
+</div>
+<script>
+    let allLi = document.querySelectorAll('.rm-list-item');
+    allLi.forEach(item=>{
+        item.onclick = (e)=>{
+            item.setAttribute('class','rm-list-item active');
+            allLi.forEach(temp=>{
+                if(item != temp){
+                    temp.setAttribute('class','rm-list-item');
+                }
+            });
+            let name = item.getAttribute('name');
+            let mdContent = document.getElementById(name.trim());
+            window.scrollTo(mdContent.offsetLeft,mdContent.offsetTop);
+        }
+    });
+</script>

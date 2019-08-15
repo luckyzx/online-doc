@@ -1,0 +1,51 @@
+<div class="sidebar u-col-xs-6 u-col-sm-2 u-col-md-2">
+    <ul class="menu-component">
+        {% for key in menu -%}
+        <li class="menu-group">
+            <div class="menu-group-title">{{ loop.key }}</div>
+            <div def="outdiv">
+                {% for item in key -%}
+                <div {% if item.active==true  %}class="menu-item selected"{%else%}class="menu-item"{% endif %}>
+                    <a name="{{item.component}}" class="{{item.new}}" id="{{item.component}}"></a>
+                    {% if item.component!='' %}
+
+                    <a href="/{{item.component}}" title="{{item.component}}">
+                        {% autoescape false %}
+                        {{ loop.key|replace('([A-Za-z-]+)','<span>$1</span>') }}
+                        {% endautoescape %}
+                    </a>
+                    {% elseif item.url!='' %}
+                    <a href="{{item.url}}" >
+                        {% autoescape false %}
+                        <label class="icon uf"> {{item.icon}}</label> {{ loop.key }}
+                        {% endautoescape %}
+                    </a>
+                    {% else %}
+                    {% autoescape false %}
+                    <label>{{ loop.key|replace('([A-Za-z-]+)','<span>$1</span>') }}</label>
+                    {% endautoescape %}
+                    {% endif %}
+                </div>
+                {%- endfor %}
+            </div>
+        </li>
+        {%- endfor %}
+    </ul>
+</div>
+<script type="text/javascript">
+    //展开/收缩
+    let allFolder = document.querySelectorAll('.menu-group-title');
+    allFolder.forEach((item,index)=>{
+        item.onclick = (e)=>{
+        let cls = item.getAttribute('class');
+        let outdiv = item.nextElementSibling;
+        if(cls.includes('open')){//打开
+            item.setAttribute('class','menu-group-title');
+            outdiv.setAttribute('class','open');
+        }else{
+            item.setAttribute('class','menu-group-title open');
+            outdiv.setAttribute('class','close');
+        }
+    }
+    });
+</script>
