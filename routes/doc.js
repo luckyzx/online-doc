@@ -27,7 +27,8 @@ function loadTemplateHtml(docName){
         docHtml = docHtml.split('</menu>').pop();
         docHtml = batchDealImgPath(docHtml,docName);
     }
-    return docHtml;
+    return marked(docHtml).replace(/\<table/gi, '<div class="table-container">\n<table')
+        .replace(/<\/table>/gi, "</table>\n</div>\n");
 }
 router.get('/', function(req, res, next) {
     activeCurMenu('',menuJson);
@@ -51,7 +52,7 @@ router.get('/:docName',(req, res, next)=>{
         content:'测试------',
         rightNav:mdTree,
         menu:menuJson,
-        doc:marked(doc)
+        doc:doc
     });
 });
 module.exports = router;
