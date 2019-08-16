@@ -32,7 +32,7 @@
                 }
             });
             let name = item.getAttribute('name');
-            let mdContent = document.getElementById(name.trim());
+            let mdContent = document.getElementById(name.trim().toLowerCase());
             window.scrollTo(mdContent.offsetLeft,mdContent.offsetTop);
         }
     });
