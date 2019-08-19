@@ -12,7 +12,7 @@ function getTopTwoTitle(filepath){
     let content = loadFileContent(filepath);
     let nav = [];
     if(content){
-        content.replace(/(#+)[^#][^\n]*?(?:\n)/g,(match,m1,m2)=>{
+        content.replace(/(#+)[\s][^#][^\n]*?(?:\n)/g,(match,m1,m2)=>{
             let title = match.replace('\n', '');
             let level = m1.length;
             nav.push({

@@ -288,7 +288,7 @@ sup {
     /* padding: 8px 16px; */
     list-style: none;
 }
-.menu-component li:first-child .menu-item {
+.menu-component li .menu-item {
     padding:0;
 }
 .menu-group .menu-group-title{
