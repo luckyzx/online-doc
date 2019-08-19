@@ -21,7 +21,7 @@ function getTopTwoTitle(filepath){
                 children: [],
             });
         });
-        return nav.filter(item =>item.level<3).map((item,index)=>{
+        return nav.filter(item =>item.level<4).map((item,index)=>{
             item.index = index+1;
             return item;
         });
@@ -43,6 +43,34 @@ function getParentIndex(arr,childindex){
 }
 
 /**
+ * 组装右侧导航栏数据--将下级存入父级的children
+ * @param param
+ * @returns {boolean}
+ */
+function generateNavData(param){
+    let {allData,maxLevel,dealData} = param;
+    let maxLevelData = dealData ? dealData : allData.filter(item=>item.level==maxLevel);
+    let preParentData = allData.filter(item=>item.level==maxLevel-1);
+    if(maxLevel == 1){
+        console.log('maxLevelData---------------1',maxLevelData)
+        return maxLevelData;
+    }else{
+        maxLevelData.forEach(item=>{
+            let parentIndex = getParentIndex(allData,item.index);
+            preParentData.forEach(temp=>{
+                if(temp.index !== parentIndex)
+                    return false;
+                temp.children = temp.children.concat(item);
+            });
+        });
+        return generateNavData({
+                    allData:allData,
+                    dealData:preParentData,
+                    maxLevel:--maxLevel
+                })
+    }
+}
+/**
  * 将md目录处理成树结构
  * @param filepath
  * @returns {boolean}
@@ -50,17 +78,9 @@ function getParentIndex(arr,childindex){
 function getRightNavTree(filepath){
     let nav = getTopTwoTitle(filepath);
     if(nav){
-        let h1 = nav.filter(item=>item.level==1);
-        let h2 = nav.filter(item=>item.level==2);
-        console.log('h1---------',h1)
-        console.log('h2---------',h2)
-        h2.forEach(item=>{
-            let parentIndex = getParentIndex(nav,item.index);
-            h1.forEach(temp=>{
-                if(temp.index !== parentIndex)
-                    return false;
-                temp.children = temp.children.concat(item);
-            });
+        let h1 = generateNavData({
+            allData:nav,
+            maxLevel:3
         });
         console.log('md目录----',h1);
         return h1;

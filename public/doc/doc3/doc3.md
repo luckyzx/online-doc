@@ -26,6 +26,10 @@ target| 设置 Affix 需要监听其滚动事件的元素，值为一个返回�
 onChange| 触发固定或者固定取消时的回调函数,返回值{ affixed: true, event: evt}| function| -
 onTargetChange| 时刻获取Affix的状态值,返回值{state}| function| -
 
+   ### API-child1
+   ### API-child2
+   ### API-child3
+
  ## 注意事项
 
  暂无

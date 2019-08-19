@@ -14,6 +14,16 @@
                         <li class="rm-list-item" name="{{item.title}}">
                             <a class="rm-list-item-a" href="#{{item.title}}" title="{{item.title}}">{{item.title}} </a>
                         </li>
+                        {% if item.children.length > 0 %}
+                            <ul class="rm-children-list">
+                                {% for item1 in item.children -%}
+                                <li class="rm-list-item" name="{{item1.title}}">
+                                    <a class="rm-list-item-a" href="#{{item1.title}}" title="{{item1.title}}">{{item1.title}} </a>
+                                </li>
+
+                                {%-endfor%}
+                            </ul>
+                        {% endif %}
                     {%-endfor%}
                 </ul>
                 {% endif %}
