@@ -2,7 +2,7 @@
     <div id="rightNavId">
         {%for key in rightNav-%}
             <ul class="rm-list">
-                    <li class="rm-list-item active" name="{{key.title}}">
+                    <li {% if loop.first  %}class="rm-list-item active"{%else%}class="rm-list-item"{% endif %} name="{{key.title}}">
                         <a class="rm-list-item-a" href="#{{key.title}}" title="{{key.title}}">{{key.title}}</a></li>
                 <!--组件右侧标题-->
                 <ul class="rm-child-list">
