@@ -95,6 +95,7 @@ function activeCurMenu(curDoc,menuJson){
  */
 function batchDealImgPath(mdContent,mdName){
     if(mdContent){
+        mdContent = decodeURI(mdContent);
         mdContent = mdContent.replace(/<(img|IMG).*?(?:>|\/>)/g,(matchStr,m1,m2)=>{
             console.log("matchStr------>",matchStr);
             let imgName='';
