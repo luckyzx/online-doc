@@ -59,7 +59,7 @@ function moveToStatic(srcPath){
         console.log(`${filename}不存在！`)
         return;
     }
-    let destFolder = path.join(__dirname,'..','..','public','doc',filename.split('.').shift());
+    let destFolder = path.join(__dirname,'..','..','public','doc',filename.split('.md').shift());
     let destPath = path.join(destFolder,filename);
     let styleFolder = path.join(destFolder,'style');
     let imgFolder = path.join(destFolder,'images');
