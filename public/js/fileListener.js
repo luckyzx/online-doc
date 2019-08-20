@@ -25,6 +25,8 @@ const watcher = chokidar.watch(path.join(__dirname,'..','..','doc'),{
 watcher.on('all',(event,path)=>{
     console.log('文件变化--->',path);
     //修改doc path后会默认追加___jb_tmp___
+    if(path.includes('___jb_tmp___'))
+        return;
     path = path.split('___jb_tmp___').shift();
     rewriteMenuJson({
         srcpath:path,
