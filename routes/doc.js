@@ -25,9 +25,9 @@ function loadTemplateHtml(docName){
         let template = swig.compileFile(docPath);
         docHtml = template();
         docHtml = docHtml.split('</menu>').pop();
-        docHtml = batchDealImgPath(docHtml,docName);
+        //docHtml = batchDealImgPath(docHtml,docName);
     }
-    return marked(docHtml).replace(/\<table/gi, '<div class="table-container">\n<table')
+    return batchDealImgPath(marked(docHtml),docName).replace(/\<table/gi, '<div class="table-container">\n<table')
         .replace(/<\/table>/gi, "</table>\n</div>\n");
 }
 router.get('/', function(req, res, next) {

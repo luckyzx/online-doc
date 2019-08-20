@@ -100,9 +100,11 @@ function batchDealImgPath(mdContent,mdName){
             let imgName='';
             matchStr.replace(/(src|SRC).*?[=](\'|\")?.+(\'|\")?[^\/>]/g,(str,regStr,index)=>{
                 imgName = str.split('=').pop().replace(/\'/g,'').replace(/\"/g,'');
+                if(str.includes('/'))
+                    imgName = str.split('src=').pop().split(' ').shift().split('/').pop().replace(/\"/g,'');
             });
             let newStr = matchStr.split('=').shift().concat("='"+path.join(path.sep,'static','doc',mdName,'images'))
-                .concat(path.sep+imgName+'\'/>');
+                .concat(path.sep+imgName+'\'').concat('width="100%" />');
             console.log('newStr--------',newStr)
             return newStr;
         });
