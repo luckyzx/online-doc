@@ -482,3 +482,14 @@ table th {
     font-size: 15px;
     margin: 0 5px;
 }
+.footer-out{
+    position: fixed;
+    background-color: rgba(43, 166, 166, 0.5);
+    color: #FFF;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    height: 20px;
+    line-height: 20px;
+}
