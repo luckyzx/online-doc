@@ -101,8 +101,13 @@ function batchDealImgPath(mdContent,mdName){
             let imgName='';
             matchStr.replace(/(src|SRC).*?[=](\'|\")?.+(\'|\")?[^\/>]/g,(str,regStr,index)=>{
                 imgName = str.split('=').pop().replace(/\'/g,'').replace(/\"/g,'');
-                if(str.includes('/'))
+                if(str.includes('/')){
                     imgName = str.split('src=').pop().split(' ').shift().split('/').pop().replace(/\"/g,'');
+                    str = str.replace(/\"/g,'\'');
+                    //兼容图片名称包含空格
+                    if(!imgName.includes('.') && str.split('src=').pop().split('\'').length>2)
+                        imgName = str.split('src=').pop().split('\'')[1].split('/').pop();
+                }
             });
             let newStr = matchStr.split('=').shift().concat("='"+path.join(path.sep,'static','doc',mdName,'images'))
                 .concat(path.sep+imgName+'\'').concat('width="100%" />');
