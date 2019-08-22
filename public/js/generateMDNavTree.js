@@ -63,6 +63,8 @@ function generateNavData(param){
                 temp.children = temp.children.concat(item);
             });
         });
+		if(preParentData.length==0)
+            return maxLevelData;
         return generateNavData({
                     allData:allData,
                     dealData:preParentData,
