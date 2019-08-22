@@ -109,7 +109,7 @@ function batchDealImgPath(mdContent,mdName){
                         imgName = str.split('src=').pop().split('\'')[1].split('/').pop();
                 }
             });
-            let newStr = matchStr.split('=').shift().concat("='"+path.join(path.sep,'static','doc',mdName,'images'))
+            let newStr = matchStr.split('src=').shift().concat("='"+path.join(path.sep,'static','doc',mdName,'images'))
                 .concat(path.sep+imgName+'\'').concat('width="100%" />');
             console.log('newStr--------',newStr)
             return newStr;
