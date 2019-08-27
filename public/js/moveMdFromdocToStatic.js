@@ -2,7 +2,7 @@ var fs = require('fs');
 var path = require('path');
 const common = require('./common');
 
-const {isFileExist,isDir,getFileExt,isMD} = common;
+const {isFileExist,isDir,getFileExt,isMD,getFirstDir} = common;
 
 /**
  * 初始化目录结构
@@ -10,10 +10,20 @@ const {isFileExist,isDir,getFileExt,isMD} = common;
  */
 function initDir(param){
     let {srcPath,destFolder,styleFolder,imgFolder,filename} = param;
+    let firstFolder = getFirstDir(srcPath);
+    if(firstFolder){
+        !isFileExist(firstFolder) && fs.mkdirSync(firstFolder);
+        !isFileExist(styleFolder) && fs.mkdirSync(styleFolder);
+        !isFileExist(imgFolder) && fs.mkdirSync(imgFolder);
+    }
     if(!isMD(srcPath) && !isImg(srcPath))
         return;
     if(isImg(srcPath)){
-        destFolder = path.join(__dirname,'..','..','public','doc',srcPath.split(path.sep + filename).shift().split(path.sep).pop());
+        //destFolder = path.join(__dirname,'..','..','public','doc',srcPath.split('doc'.concat(path.sep)).pop());
+        destFolder = path.join(__dirname,'..','..','public','doc',srcPath.split(path.sep + filename).shift().split(path.sep.concat('doc')).pop());
+        let relativePath = destFolder.split('doc'+ path.sep).pop().split(path.sep);
+        if(relativePath.length > 1)
+            destFolder = destFolder.split(path.sep+relativePath[0]).shift().concat(path.sep + relativePath[0]);
         styleFolder = path.join(destFolder,'style');
         imgFolder = path.join(destFolder,'images');
         console.log('最新参数---》',destFolder,styleFolder,imgFolder)
@@ -46,8 +56,30 @@ function copyFile(param){
  * @returns {*}
  */
 function isImg(filepath){
-    console.log('后缀-----------',getFileExt(filepath).toLowerCase());
-    return ".jpg,.png,.gif,.bmp".includes(getFileExt(filepath).toLowerCase());
+    let ext = getFileExt(filepath).toLowerCase();
+    if(!ext) return false;
+    return ".jpg,.png,.gif,.bmp".includes(ext);
+}
+function copyDir(param){
+    let {srcPath,destFolder,imgFolder} = param;
+    let srcdir = fs.readdirSync(srcPath);
+    srcdir.forEach((item)=>{
+        let filePath = path.join(srcPath,item);
+        if(isDir(filePath))
+            copyDir({
+                srcPath:filePath,
+                destFolder,
+                filename:item,
+                imgFolder
+            });
+        else
+            copyFile({
+                srcPath:filePath,
+                destFolder,
+                filename:item,
+                imgFolder
+            });
+    });
 }
 /**
  * 将doc/下  新增的md文件拷贝到public/doc/下
@@ -59,7 +91,12 @@ function moveToStatic(srcPath){
         console.log(`${filename}不存在！`)
         return;
     }
-    let destFolder = path.join(__dirname,'..','..','public','doc',filename.split('.md').shift());
+    //let destFolder = path.join(__dirname,'..','..','public','doc',filename.split('.md').shift());
+    let destFolder = path.join(__dirname,'..','..','public','doc',srcPath.split('doc'.concat(path.sep)).pop().split(path.sep).shift());
+    //暂时支持两级结构
+    let relativePath = destFolder.split('doc'+ path.sep).pop().split(path.sep);
+    if(relativePath.length > 1)
+        destFolder = destFolder.split(path.sep+relativePath[0]).shift().concat(path.sep + relativePath[0]);
     let destPath = path.join(destFolder,filename);
     let styleFolder = path.join(destFolder,'style');
     let imgFolder = path.join(destFolder,'images');
@@ -72,20 +109,19 @@ function moveToStatic(srcPath){
     });
     console.log('isDir()---------->',isDir(srcPath))
     if(isDir(srcPath)){
-        let srcdir = fs.readdirSync(srcPath);
-        srcdir.forEach((item)=>{
-            console.log(item)
-            let filePath = path.join(srcPath,item);
-            copyFile({
-                srcPath,
-                destFolder,
-                filename,
-                imgFolder
-            });
+        copyDir({
+            srcPath,
+            destFolder,
+            filename,
+            imgFolder
         });
     }else{
         if(isImg(srcPath)){
-            destFolder = path.join(__dirname,'..','..','public','doc',srcPath.split(path.sep + filename).shift().split(path.sep).pop());
+            destFolder = path.join(__dirname,'..','..','public','doc',srcPath.split(path.sep + filename).shift().split(path.sep.concat('doc')).pop());
+            //暂时支持两级结构
+            relativePath = destFolder.split('doc'+ path.sep).pop().split(path.sep);
+            if(relativePath.length > 1)
+                destFolder = destFolder.split(path.sep+relativePath[0]).shift().concat(path.sep + relativePath[0]);
             imgFolder = path.join(destFolder,'images');
         }
         copyFile({

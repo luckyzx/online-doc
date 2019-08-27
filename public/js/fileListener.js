@@ -23,6 +23,9 @@ const watcher = chokidar.watch(path.join(__dirname,'..','..','doc'),{
 });
 //监听doc文件夹下 add addDir unlink（删除文件） unlinkDir（删除文件夹） change（文件内容改变）
 watcher.on('all',(event,path)=>{
+    //屏蔽删除
+    if('unlink,unlinkDir'.includes(event))
+        return;
     console.log('文件变化--->',path);
     //修改doc path后会默认追加___jb_tmp___
     if(path.includes('___jb_tmp___'))
@@ -31,7 +34,7 @@ watcher.on('all',(event,path)=>{
     rewriteMenuJson({
         srcpath:path,
         callback:()=>{
-            moveToStatic(path);
+            //moveToStatic(path);
         }
     });
 });

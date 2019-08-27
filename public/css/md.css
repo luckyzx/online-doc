@@ -8,6 +8,7 @@
 .sidebar{
     display: inline-block;
     vertical-align: top;
+    width:20%;
     position: fixed;
     overflow: auto;
     height: calc(100% - 65px);
@@ -48,7 +49,8 @@
     height: 1px;
 }
 .sidebar::-webkit-scrollbar-thumb {
-    border-radius: 6px;
+    border-radius: 1px;
+    display:none;
     background-color: hsla(220,4%,58%,.5);
 }
 .demo-container{

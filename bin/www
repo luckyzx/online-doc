@@ -7,6 +7,9 @@
 var app = require('../app');
 var debug = require('debug')('online-doc:server');
 var http = require('http');
+const parseMDMenu = require('../public/js/parseMDMenu');
+
+const {generateMenuJson} = parseMDMenu;
 
 /**
  * Get port from environment and store in Express.
@@ -87,4 +90,5 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+    generateMenuJson();
 }

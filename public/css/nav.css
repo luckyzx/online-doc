@@ -2,11 +2,12 @@
     position: fixed;
     z-index: 1030;
     background: white;
-    width: 100%;
+    right: 0;
     height: 65px;
     line-height: 65px;
-    border-bottom: 1px solid #DFDFDF;
     font-size: 14px;
+    box-shadow: 0 2px 8px #f0f1f2;
+    margin-bottom: 10px;
 }
 
 .nav .nav-left .nav-logo {
@@ -75,14 +76,28 @@
     left: 0;
 }
 
-.nav .nav-right .nav-options {
-    float: right;
+.nav .nav-options {
+    display: flex;
+    flex-direction: row-reverse;
+}
+.nav .nav-options>li{
+    margin-right: 30px;
+}
+.nav .nav-options>li>a{
+    color: #314659;
 }
 
-
 .nav .nav-right .nav-options li {
-    float: left;
     margin-right: 38px;
+    display: inline-block;
+}
+.nav .nav-options .use-search {
+    margin-top: 15px;
+    margin-right: 20px;
+}
+.nav .nav-options .use-search .u-input-group-btn {
+    display: flex;
+    align-items: center;
 }
 .nav .nav-right .nav-options li.language {
     color: #ccc;
@@ -285,4 +300,9 @@ input::-webkit-input-placeholder {
     padding: 0 16px;
     height: 30px;
     line-height: 30px;
+}
+
+.nav .u-navbar-brand {
+    height: 62px;
+    line-height: 50px;
 }

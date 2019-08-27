@@ -9,16 +9,18 @@ const common = require('../public/js/common');
 const generateMDNavTree = require('../public/js/generateMDNavTree');
 require('../public/js/fileListener');
 
-let {activeCurMenu,batchDealImgPath} = common;
+let {activeCurMenu,batchDealImgPath,isFileExist} = common;
 let {getRightNavTree} = generateMDNavTree;
 /**
  * 加载md内容，返回html
  * @param docName
  * @returns {*}
  */
-function loadTemplateHtml(docName){
+function loadTemplateHtml(docName,parent){
     var docHtml;
-    let docPath = path.join(__dirname,'..','public', 'doc',docName,docName+'.md');
+    let docPath = path.join(__dirname,'..', 'doc',parent || docName,docName+'.md');
+    if(!parent)
+        docPath = path.join(__dirname,'..', 'doc', docName+'.md');
     if(!fs.existsSync(docPath))
         docHtml = "";
     else{
@@ -27,7 +29,7 @@ function loadTemplateHtml(docName){
         docHtml = docHtml.split('</menu>').pop();
         //docHtml = batchDealImgPath(docHtml,docName);
     }
-    return batchDealImgPath(marked(docHtml),docName).replace(/\<table/gi, '<div class="table-container">\n<table')
+    return batchDealImgPath(marked(docHtml),parent || docName).replace(/\<table/gi, '<div class="table-container">\n<table')
         .replace(/<\/table>/gi, "</table>\n</div>\n");
 }
 router.get('/', function(req, res, next) {
@@ -39,14 +41,31 @@ router.get('/', function(req, res, next) {
         menu:menuJson
     });
 });
-router.get('/:docName',(req, res, next)=>{
-    console.log('req.params.docName:' + req.params.docName);
-    var doc = loadTemplateHtml(req.params.docName || 'doc');
+function renderPage(param){
+    let {req,res,flag} = param;
+    var doc = '';
+    let parent = '';
+    if(flag == 'second'){
+        parent = req.params.parent;
+    }else if(flag == 'third'){
+        parent = req.params.parent.concat(path.sep + req.params.menuname);
+    }
+    doc = loadTemplateHtml(req.params.docName ,parent);
+
     console.log('doc------->',doc)
     console.log('menuJson--------->',menuJson);
-    activeCurMenu(req.params.docName,menuJson);
+    if(flag == 'first')
+        activeCurMenu(req.params.docName,menuJson);
+    else
+        activeCurMenu(parent.concat(path.sep).concat(req.params.docName),menuJson);
     console.log('激活当前选中菜单后menuJson---------',menuJson)
-    let mdTree = getRightNavTree(path.join(__dirname,'..','public', 'doc',req.params.docName,req.params.docName+'.md'));
+    let mdPath = path.join(__dirname,'..', 'doc',parent,req.params.docName+'.md');
+    if(flag == 'first'){
+        mdPath = path.join(__dirname,'..', 'doc',req.params.docName,req.params.docName+'.md');
+        if(!isFileExist(mdPath))
+            mdPath = path.join(__dirname,'..', 'doc',req.params.docName+'.md');
+    }
+    let mdTree = getRightNavTree(mdPath);
     res.render('doc',{
         title:'markdown测试-',
         content:'测试------',
@@ -54,5 +73,14 @@ router.get('/:docName',(req, res, next)=>{
         menu:menuJson,
         doc:doc
     });
+}
+router.get('/:parent/:menuname/:docName', function(req, res, next) {
+    renderPage({req,res,flag:'third'});
+});
+router.get('/:parent/:docName', function(req, res, next) {
+    renderPage({req,res,flag:'second'});
+});
+router.get('/:docName',(req, res, next)=>{
+    renderPage({req,res,flag:'first'});
 });
 module.exports = router;

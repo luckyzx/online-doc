@@ -1,4 +1,4 @@
-<div class="sidebar u-col-xs-6 u-col-sm-2 u-col-md-2">
+<div class="sidebar">
     <ul class="menu-component">
         {% for key in menu -%}
         <li class="menu-group">
@@ -48,4 +48,8 @@
         }
     }
     });
+    let curNode = document.querySelector('div.menu-item.selected');
+    let div = document.querySelector('div.sidebar');
+    if(curNode)
+        div.scrollTo(curNode.offsetLeft,curNode.offsetTop);
 </script>

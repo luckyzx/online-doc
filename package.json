@@ -4,7 +4,7 @@
   "description": "二次开发现在文档",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "nodemon ./bin/www -i ./public/json"
   },
   "dependencies": {
     "babel-core": "^6.26.3",

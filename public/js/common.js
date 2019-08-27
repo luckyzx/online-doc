@@ -24,6 +24,19 @@ function writeFile(param) {
 }
 
 /**
+ * 删除文件
+ * @param param
+ */
+function deleteFile(param){
+    let {file,callback} = param;
+    fs.unlink(file, (err)=> {
+        if (err) throw err;
+        console.log(isFileExist(file))
+        callback && callback();
+    });
+}
+
+/**
  * 读取文件内容
  * @param filepath
  * @returns {*}
@@ -43,7 +56,7 @@ function isDir(filepath){
     try{
         stas = fs.lstatSync(filepath);
     }catch(e){
-        stas = fs.lstatSync(filepath.concat('___jb_tmp___'));
+        throw e;
     }
     return stas.isDirectory();
 }
@@ -99,22 +112,78 @@ function batchDealImgPath(mdContent,mdName){
         mdContent = mdContent.replace(/<(img|IMG).*?(?:>|\/>)/g,(matchStr,m1,m2)=>{
             console.log("matchStr------>",matchStr);
             let imgName='';
+            let imgPath='';
             matchStr.replace(/(src|SRC).*?[=](\'|\")?.+(\'|\")?[^\/>]/g,(str,regStr,index)=>{
-                imgName = str.split('=').pop().replace(/\'/g,'').replace(/\"/g,'');
-                if(str.includes('/')){
+                //说明有多个属性
+                if(str.split('src=').pop().includes('=')){
+                    imgName = str.split('src=').pop().split(' ').shift().replace(/\'/g,'').replace(/\"/g,'');
+                    imgPath =str.split('src=').pop().split(' ').shift().replace(/\'/g,'').replace(/\"/g,'');
+                }else{
+                    imgName = str.split('src=').pop().replace(/\'/g,'').replace(/\"/g,'');
+                    imgPath = str.split('src=').pop().replace(/\'/g,'').replace(/\"/g,'');
+                }
+                if(imgPath.includes('./')){
+                    imgPath = path.join(mdName,imgPath.split('./').pop());
+                }else if(imgPath.includes('.\\'))
+                    imgPath = path.join(mdName,imgPath.split('.\\').pop());
+                else
+                    imgPath = path.join(mdName,imgPath);
+
+                if(str.includes('/') || str.includes('\\')){
                     imgName = str.split('src=').pop().split(' ').shift().split('/').pop().replace(/\"/g,'');
+                    if(str.includes('\\'))
+                        imgName = str.split('src=').pop().split(' ').shift().split('\\').pop().replace(/\"/g,'');
                     str = str.replace(/\"/g,'\'');
                     //兼容图片名称包含空格
                     if(!imgName.includes('.') && str.split('src=').pop().split('\'').length>2)
                         imgName = str.split('src=').pop().split('\'')[1].split('/').pop();
                 }
             });
-            let newStr = matchStr.split('=').shift().concat("='"+path.join(path.sep,'static','doc',mdName,'images'))
-                .concat(path.sep+imgName+'\'').concat(' width="100%" />');
+            imgPath = imgPath.split(imgName).shift();
+            /*let newStr = matchStr.split('=').shift().concat("='"+path.join(path.sep,'static','doc',mdName,'images'))
+                .concat(path.sep+imgName+'\'').concat(' width="100%" />');*/
+            let newStr = matchStr.split('src=').shift().concat('src=\'').concat(path.join(path.sep,'doc',imgPath,imgName))
+                .concat('\' width="100%"  ').concat(matchStr.split(imgName).pop().replace(/\'/g,'').replace(/\"/g,''));
             console.log('newStr--------',newStr)
             return newStr;
         });
         return mdContent;
+    }
+}
+
+/**
+ * 获取第一层目录
+ * @param srcpath
+ * @returns {T | undefined}
+ */
+function getFirstDir(srcpath){
+    if(isDir(srcpath)){
+        let relativePath = srcpath.split('doc'.concat(path.sep)).pop();
+        let folderName = relativePath.split(path.sep).shift();
+        return srcpath.split(folderName).shift().concat(folderName);
+    }
+}
+
+/**
+ * 读取目录
+ * @param param
+ */
+function readDir(param){
+    let {dirpath,callback} = param;
+    if(isDir(dirpath)){
+        let files = fs.readdirSync(dirpath,{
+            encoding:'utf8'
+        });
+        files.forEach(item=>{
+            let filepath = path.join(dirpath,item);
+            if(isDir(filepath)){
+                readDir({
+                    dirpath:filepath,
+                    callback
+                })
+            }else
+                callback && callback(filepath);
+        });
     }
 }
 module.exports = {
@@ -125,5 +194,8 @@ module.exports = {
     getFileExt:getFileExt,
     isMD:isMD,
     activeCurMenu:activeCurMenu,
-    batchDealImgPath:batchDealImgPath
+    batchDealImgPath:batchDealImgPath,
+    getFirstDir:getFirstDir,
+    readDir:readDir,
+    deleteFile:deleteFile
 };

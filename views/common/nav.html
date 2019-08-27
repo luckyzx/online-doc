@@ -1,24 +1,38 @@
 <nav class="u-navbar u-navbar-default u-navbar-fixed-top demo-web-navbar" role="navigation">
     <div class="u-row nav">
-        <div class="u-col-md-5 nav-left">
-            <button type="button" class="u-navbar-toggle u-hamburger u-hamburger-close  u-collapsed"
+        <div class="nav-left">
+            <!-- <button type="button" class="u-navbar-toggle u-hamburger u-hamburger-close  u-collapsed"
                     data-target="#example-default-collapse" data-toggle="collapse">
-                <!-- <span class="sr-only">Toggle navigation</span> -->
+                <span class="sr-only">Toggle navigation</span>
                 <span class="u-hamburger-bar"></span>
-            </button>
-            <a class="u-navbar-brand" href="/">NCCloud二开文档</a>
+            </button> -->
+            <img src="/static/logo/NC Cloud-logo使用-03.png" class="logo"/>
+            <a class="u-navbar-brand" href="/">技术文档</a>
         </div>
         <ul class="nav-options">
-            <li>
-                <a class="nav-par" href="/">首页</a>
+            <li class="nav-item">
+                <span class="u-input-group simple use-search"><input type="text" class="u-form-control md" value=""><span shape="border" class="u-input-group-btn"><span class="uf uf-search"> </span></span></span>
             </li>
-            <li style="display: none;">
-                <a class="nav-par" href="/changelog">更新日志</a>
-            </li>
-            <li style="display:none">
+            <li class="nav-item">
                 <a class="nav-par"  target="_blank" href="https://tinper-bee.github.io/tinper-bee-history/">历史版本</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-par" href="/design">设计语言</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-par" href="/component">高阶组件</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-par" href="/team">团队</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-par" href="/">首页</a>
+            </li>
         </ul>
-
     </div>
+    <script>
+        document.querySelector('.logo').onclick=()=>{
+            window.location.href = "http://"+window.location.host + '/';
+        }
+    </script>
 </nav>
