@@ -8,11 +8,11 @@ var swig = require('swig');
 var bodyParser = require('body-parser');
 
 var app = express();
-//设置swig页面不缓存
+
 swig.setDefaults({
-    cache: false
+    loader: swig.loaders.fs(__dirname + '/views'),//从文件载入模板，请写绝对路径，不要使用相对路径
+    cache: false//设置swig页面不缓存
 });
-swig.setDefaults({loader: swig.loaders.fs(__dirname + '/views')}); //从文件载入模板，请写绝对路径，不要使用相对路径
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));//设置项目的页面文件，也就是html文件的位置
@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use('/static',express.static(path.join(__dirname, 'public')));
-app.use('/doc',express.static(path.join(__dirname, 'doc')));
+app.use('/doc',express.static(path.join(__dirname, 'doc'),{maxAge:1}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 

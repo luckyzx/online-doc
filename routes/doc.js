@@ -9,7 +9,7 @@ const common = require('../public/js/common');
 const generateMDNavTree = require('../public/js/generateMDNavTree');
 require('../public/js/fileListener');
 
-let {activeCurMenu,batchDealImgPath,isFileExist} = common;
+let {activeCurMenu,batchDealImgPath,isFileExist,loadFileContent} = common;
 let {getRightNavTree} = generateMDNavTree;
 /**
  * 加载md内容，返回html
@@ -24,10 +24,11 @@ function loadTemplateHtml(docName,parent){
     if(!fs.existsSync(docPath))
         docHtml = "";
     else{
+        /*不使用此种方式，因此种方式会有缓存
         let template = swig.compileFile(docPath);
-        docHtml = template();
+        docHtml = template();*/
+        docHtml = loadFileContent(docPath);
         docHtml = docHtml.split('</menu>').pop();
-        //docHtml = batchDealImgPath(docHtml,docName);
     }
     return batchDealImgPath(marked(docHtml),parent || docName).replace(/\<table/gi, '<div class="table-container">\n<table')
         .replace(/<\/table>/gi, "</table>\n</div>\n");

@@ -44,7 +44,7 @@
             let name = item.getAttribute('name');
             let mdContent = document.getElementById(name.trim().toLowerCase());
             if(!mdContent)
-                mdContent=document.getElementById(name.trim().replace(/\s/g,'-').replace(/\./g,'').toLowerCase());
+                mdContent=document.getElementById(name.trim().replace(/\t/g,'----').replace(/\s/g,'-').replace(/\./g,'').toLowerCase());
             window.scrollTo(mdContent.offsetLeft,mdContent.offsetTop);
         }
     });
